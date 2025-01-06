@@ -1,0 +1,18 @@
+
+[
+  {
+    "name": "Warehouse A",
+    "status": "123 Main St, Springfield, IL",
+    "company": "MED house pharmaceutical ltd"
+  },
+  {
+    "name": "Warehouse B",
+    "status": "456 Elm St, Metropolis, NY",
+    "company": "MED house pharmaceutical ltd"
+  },
+  {
+    "name": "Warehouse C",
+    "status": "789 Oak St, Gotham, NJ",
+    "company": "MED house pharmaceutical ltd"
+  }
+]
