@@ -1,0 +1,1 @@
+# knvm-inventory
