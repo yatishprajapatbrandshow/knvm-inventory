@@ -1496,23 +1496,38 @@ const AnyOther = () => {
                     </dl>
 
                     <dl className="grid gap-x-3 text-sm sm:flex">
-                      <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
-                        Payment Terms:
-                      </label>
-                      <input
-                        className={`${Preview
-                          ? "outline-none focus:border-0"
-                          : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                          }  block w-full flex-1
-                        text-sm text-gray-900`}
-                        type="text"
-                        value={PaymentTerm}
-                        pattern="[0-9]*"
-                        required
-                        readOnly={Preview}
-                        onChange={(e) => setPaymentTerm(e.target.value)}
-                      />
-                    </dl>
+  <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
+    Payment Terms:
+  </label>
+
+  <div className="relative">
+    {/* Input Field with Datalist for Suggestions */}
+    <input
+      list="payment-terms" // Reference to the datalist id
+      className={`${
+        Preview
+          ? "outline-none focus:border-0"
+          : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+      } block w-full flex-1 text-sm text-gray-900`}
+      type="text"
+      value={PaymentTerm}
+      required
+      readOnly={Preview}
+      onChange={(e) => setPaymentTerm(e.target.value)}
+      placeholder="Enter Payment Term"
+    />
+
+    {/* Datalist with default options */}
+    <datalist id="payment-terms">
+      <option value="CASH / MOMO / CHEQUE ON DELIVERY / PDC CHEQUE" />
+      <option value="CASH" />
+      <option value="MOMO" />
+      <option value="CHEQUE ON DELIVERY" />
+      <option value="PDC CHEQUE" />
+    </datalist>
+  </div>
+  </dl>
+
                     <dl className="grid gap-x-3 text-sm sm:flex pb-4 pt-2">
                       <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
                         Total No Of Carton :
