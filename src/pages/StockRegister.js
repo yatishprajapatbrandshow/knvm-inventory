@@ -59,6 +59,7 @@ const AnyOther = () => {
       });
 
       const data = await response.json();
+      console.log("Product List:", data);
       if (data.status === true) {
         setProductList(data.products);
       } else {
@@ -135,12 +136,13 @@ const AnyOther = () => {
 
   const filteredStockRegisters = filterStockRegisters();
 
-  // Modify the handleOnclick function to differentiate between SKU and Product Name clicks
+ 
   const handleOnclick = (item, type) => {
     if (type === "SKU") {
-      setSelectedSku(item.sku);  // Set the SKU when clicked
-      setShowInvoicePopUp(true);  // Show the ProductInvoicePopUp modal
-      setShowPopUp(false);  // Close any other modals
+      setSelectedSku(item.sku);  
+      setSelectedData(item);     
+      setShowInvoicePopUp(true); 
+      setShowPopUp(false);      
     } else if (type === "Product Name") {
       // Show the standard PopUp
       setSelectedData(item);
@@ -148,10 +150,6 @@ const AnyOther = () => {
       setShowInvoicePopUp(false); // Hide ProductInvoicePopUp
     }
   };
-  
-  
-  
-  
 
   return (
     <>
@@ -227,7 +225,6 @@ const AnyOther = () => {
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
                         {filteredStockRegisters.map((item) => {
-                          // Calculate total running balance for the current item (based on SKU)
                           const runningBalance = StockRegister.filter((stock) => stock.sku === item.sku)
                             .reduce((acc, stockItem) => acc + (stockItem.runningBalance || 0), 0);
 
@@ -280,11 +277,16 @@ const AnyOther = () => {
         </div>
       )}
 
-{showInvoicePopUp && selectedSku && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <ProductInvoicePopUp sku={selectedSku} setShowPop={setShowInvoicePopUp} />
-  </div>
-)}
+      {showInvoicePopUp && selectedSku && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <ProductInvoicePopUp 
+            sku={selectedSku} 
+            productId={selectedData.productId} 
+            productName={selectedData.productId && FindSku(selectedData.productId).name}
+            setShowPop={setShowInvoicePopUp} 
+          />
+        </div>
+      )}
     </>
   );
 };

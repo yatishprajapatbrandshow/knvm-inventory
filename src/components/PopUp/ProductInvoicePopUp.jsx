@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { API_NEW_URL, X_API_Key } from "../../config";
 
-const ProductInvoicePopUp = ({ sku, setShowPop }) => {
+const ProductInvoicePopUp = ({ sku, productId, productName, setShowPop }) => {
   const [invoiceData, setInvoiceData] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state to handle API call
   const [error, setError] = useState(null); // Error state
@@ -12,13 +12,15 @@ const ProductInvoicePopUp = ({ sku, setShowPop }) => {
       setLoading(true);
       setError(null); // Reset error state
       try {
-        const response = await fetch(`${API_NEW_URL}product-invoice/invoices-by-product?productId=${sku}`, {
+        const response = await fetch(`${API_NEW_URL}product-invoice/invoices-by-product?productId=${productId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "X-API-Key": X_API_Key,
           },
         });
+
+        console.log("API Response:", response);
         const data = await response.json();
         if (data.status === true || response.ok) {
           setInvoiceData(data.invoiceGoods); // Assuming the response has `invoiceGoods` key
@@ -32,10 +34,10 @@ const ProductInvoicePopUp = ({ sku, setShowPop }) => {
       }
     };
 
-    if (sku) {
+    if (productId) {
       fetchInvoiceData();
     }
-  }, [sku]); // Re-run this effect if SKU changes
+  }, [productId]); // Re-run this effect if productId changes
 
   // Handle the modal close
   const handleClose = () => {
@@ -92,7 +94,7 @@ const ProductInvoicePopUp = ({ sku, setShowPop }) => {
         <div className="col-span-2 h-full w-full xl:col-span-2 2xl:col-span-2">
           <div className="flex items-center justify-between rounded-lg border-b-[1px] border-l-gray-300 bg-blue-500 px-4 py-2 text-xl font-bold text-white">
             <div className="flex items-center">
-              <span>Invoice Goods for SKU: {sku}</span>
+              <span>Invoice Details for Product : {productName}</span>
             </div>
           </div>
           <div className="mt-5">
