@@ -4,6 +4,7 @@ import { API_NEW_URL, X_API_Key } from "../config";
 import { isSessionActive } from "utils/sessionUtils";
 import { useNavigate, useLocation } from "react-router-dom";
 import PopUp from '../components/PopUp/PopUp'
+import ProductInvoicePopUp from '../components/PopUp/ProductInvoicePopUp'; // Ensure this import is correct
 import "react-datepicker/dist/react-datepicker.css";
 
 const AnyOther = () => {
@@ -15,7 +16,10 @@ const AnyOther = () => {
   const [StockRegister, setStockRegister] = useState([]);
   const [sortedStockRegister, setSortedStockRegister] = useState([]);
   const [showPop, setShowPopUp] = useState(false);
+  const [showInvoicePopUp, setShowInvoicePopUp] = useState(false); // State for ProductInvoicePopUp
   const [selectedData, setSelectedData] = useState({});
+  const [selectedSku, setSelectedSku] = useState(null); // State to store selected SKU
+
   useEffect(() => {
     if (!Session) navigate("/login");
   }, [Session, navigate]);
@@ -70,7 +74,6 @@ const AnyOther = () => {
     getStockRegister();
   }, []);
 
-  // Remove duplicates based on SKU
   const getUniqueDataBySku = (data) => {
     const uniqueData = new Map();
     data.forEach((item) => {
@@ -88,7 +91,6 @@ const AnyOther = () => {
         const productNameB = FindSku(b.productId).name.toLowerCase();
         return productNameA.localeCompare(productNameB);
       });
-      console.log(sortedData);
 
       setSortedStockRegister(sortedData);
     }
@@ -108,8 +110,8 @@ const AnyOther = () => {
 
   const handleSearchQueryChange = (event) => {
     setSearchQuery(event.target.value);
-  };  
-  
+  };
+
   const filterStockRegisters = () => {
     if (!searchQuery) {
       return sortedStockRegister;
@@ -133,14 +135,23 @@ const AnyOther = () => {
 
   const filteredStockRegisters = filterStockRegisters();
 
-  const handleOnclick = (item) => {
-    console.log("test ",item);
-    
-    const sku = item.sku; 
-    // const data = StockRegister.filter((item) => item.sku === sku);
-    setShowPopUp(true);
-    setSelectedData(item)
-  }
+  // Modify the handleOnclick function to differentiate between SKU and Product Name clicks
+  const handleOnclick = (item, type) => {
+    if (type === "SKU") {
+      setSelectedSku(item.sku);  // Set the SKU when clicked
+      setShowInvoicePopUp(true);  // Show the ProductInvoicePopUp modal
+      setShowPopUp(false);  // Close any other modals
+    } else if (type === "Product Name") {
+      // Show the standard PopUp
+      setSelectedData(item);
+      setShowPopUp(true);
+      setShowInvoicePopUp(false); // Hide ProductInvoicePopUp
+    }
+  };
+  
+  
+  
+  
 
   return (
     <>
@@ -151,7 +162,6 @@ const AnyOther = () => {
         />
         <div className="mt-8 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <div className="bg-[#3B82F6] h-full w-full mb-2 rounded-md flex items-center p-2">
                 <div className="">
@@ -162,7 +172,6 @@ const AnyOther = () => {
                   >
                     <option value="SKU">SKU</option>
                     <option value="Product Name">Product Name</option>
-                    {/* <option value="Batch">Batch</option> */}
                   </select>
                   <input
                     type="text"
@@ -199,78 +208,61 @@ const AnyOther = () => {
                     <table className="min-w-full divide-y divide-gray-300">
                       <thead className="bg-gray-50 sticky top-0 z-10">
                         <tr>
-                          <th
-                            scope="col"
-                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                          >
+                          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                             Product Name
                           </th>
-                          {/* <th
-                            scope="col"
-                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                          >
-                            Batch
-                          </th> */}
-                          <th
-                            scope="col"
-                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                          >
+                          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                             SKU
                           </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                             Total Quantity In
                           </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                             Total Quantity Out
                           </th>
-                          <th
-                            scope="col"
-                            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                          >
+                          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                             Running Balance
                           </th>
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredStockRegisters.map((item) => (
-                          <tr key={item._id}>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                              <span className="hover:underline cursor-pointer hover:text-[#3B82F6]" onClick={() => {
-                                {
-                                  handleOnclick(item)
-                                }
-                              }}> {item.productId && ProductList
-                                ? FindSku(item.productId).name
-                                : "SKU not found"}</span>
-                            </td>
-                            {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                              {item.batch}
-                            </td> */}
+                        {filteredStockRegisters.map((item) => {
+                          // Calculate total running balance for the current item (based on SKU)
+                          const runningBalance = StockRegister.filter((stock) => stock.sku === item.sku)
+                            .reduce((acc, stockItem) => acc + (stockItem.runningBalance || 0), 0);
 
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 cursor-pointer">
-                              <span className="hover:underline hover:text-[#3B82F6]" onClick={() => {
-                                {
-                                  handleOnclick(item)
-                                }
-                              }}>{item.sku}</span>
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                              {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityIn, 0)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                            {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityOut, 0)}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                            {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.runningBalance, 0)}
-                            </td>
-                          </tr>
-                        ))}
+                          const runningBalanceStyle = runningBalance < 100 ? { color: 'red' } : {};
+
+                          return (
+                            <tr key={item._id}>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                <span className="hover:underline cursor-pointer hover:text-[#3B82F6]" onClick={() => {
+                                  handleOnclick(item, "Product Name");
+                                }}>
+                                  {item.productId && ProductList
+                                    ? FindSku(item.productId).name
+                                    : "SKU not found"}
+                                </span>
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 cursor-pointer">
+                                <span className="hover:underline hover:text-[#3B82F6]" onClick={() => {
+                                  handleOnclick(item, "SKU");
+                                }}>
+                                  {item.sku}
+                                </span>
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityIn, 0)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityOut, 0)}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
+                                <span style={runningBalanceStyle}>{runningBalance}</span>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -279,20 +271,22 @@ const AnyOther = () => {
             </div>
           </div>
         </div>
-        {console.log(showPop)}
       </div>
-      {
-        showPop ? (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <PopUp item={selectedData} setShowPop={setShowPopUp} />
-          </div>
-        ) : null
-      }
 
+      {/* Conditional rendering of PopUp and ProductInvoicePopUp */}
+      {showPop && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <PopUp item={selectedData} setShowPop={setShowPopUp} />
+        </div>
+      )}
 
+{showInvoicePopUp && selectedSku && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <ProductInvoicePopUp sku={selectedSku} setShowPop={setShowInvoicePopUp} />
+  </div>
+)}
     </>
   );
 };
 
 export default AnyOther;
-  
