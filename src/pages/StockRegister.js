@@ -224,43 +224,49 @@ const AnyOther = () => {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredStockRegisters.map((item) => {
-                          const runningBalance = StockRegister.filter((stock) => stock.sku === item.sku)
-                            .reduce((acc, stockItem) => acc + (stockItem.runningBalance || 0), 0);
+  {filteredStockRegisters.map((item) => {
+    const runningBalance = StockRegister.filter((stock) => stock.sku === item.sku)
+      .reduce((acc, stockItem) => acc + (stockItem.runningBalance || 0), 0);
 
-                          const runningBalanceStyle = runningBalance < 100 ? { color: 'red' } : {};
+    // Determine if runningBalance is less than 100
+    const isLowBalance = runningBalance < 100;
 
-                          return (
-                            <tr key={item._id}>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                                <span className="hover:underline cursor-pointer hover:text-[#3B82F6]" onClick={() => {
-                                  handleOnclick(item, "Product Name");
-                                }}>
-                                  {item.productId && ProductList
-                                    ? FindSku(item.productId).name
-                                    : "SKU not found"}
-                                </span>
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900 cursor-pointer">
-                                <span className="hover:underline hover:text-[#3B82F6]" onClick={() => {
-                                  handleOnclick(item, "SKU");
-                                }}>
-                                  {item.sku}
-                                </span>
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                                {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityIn, 0)}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                                {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityOut, 0)}
-                              </td>
-                              <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-900">
-                                <span style={runningBalanceStyle}>{runningBalance}</span>
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
+    return (
+      <tr key={item._id}>
+        <td className={`whitespace-nowrap px-3 py-4 text-sm ${isLowBalance ? 'text-red-500' : 'text-gray-900'}`}>
+          <span className="hover:underline cursor-pointer hover:text-[#3B82F6]" onClick={() => {
+            handleOnclick(item, "Product Name");
+          }}>
+            {item.productId && ProductList
+              ? FindSku(item.productId).name
+              : "SKU not found"}
+          </span>
+        </td>
+        <td className={`whitespace-nowrap px-3 py-4 text-sm ${isLowBalance ? 'text-red-500' : 'text-gray-900'}`}>
+          <span className="hover:underline hover:text-[#3B82F6]" onClick={() => {
+            handleOnclick(item, "SKU");
+          }}>
+            {item.sku}
+          </span>
+        </td>
+        <td className={`whitespace-nowrap px-3 py-4 text-sm ${isLowBalance ? 'text-red-500' : 'text-gray-900'}`}>
+          {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityIn, 0)}
+        </td>
+        <td className={`whitespace-nowrap px-3 py-4 text-sm ${isLowBalance ? 'text-red-500' : 'text-gray-900'}`}>
+          {StockRegister.filter((stock) => stock.sku === item.sku).reduce((acc, item) => acc + item.totalQuantityOut, 0)}
+        </td>
+        <td className={`whitespace-nowrap px-3 py-4 text-sm ${isLowBalance ? 'text-red-500' : 'text-gray-900'}`}>
+          <span>{runningBalance}</span>
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
+
+
+
+
                     </table>
                   </div>
                 </div>
