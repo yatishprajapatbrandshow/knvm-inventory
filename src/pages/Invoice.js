@@ -238,7 +238,7 @@ const AnyOther = () => {
       const data = await response.json();
 
       const filteredData = data.stockRegisters;
-      
+
       if (data.status === true) {
         return filteredData;
       } else {
@@ -819,58 +819,58 @@ const AnyOther = () => {
         selectBatch.push({ batch: item?.batch, sku: item?.sku }); // Include sku for better identification
       });
     }
-  
+
     const addedBatch = [];
     if (AddedProduct) {
       AddedProduct.map((item) => {
         addedBatch.push({ batch: item?.batch, sku: item?.sku }); // Include sku for better identification
       });
     }
-  
+
     // Combine both selectBatch and addedBatch, ensuring uniqueness based on both batch and sku
     const batchNotToShow = [
       ...selectBatch.map(item => `${item.batch}-${item.sku}`),
       ...addedBatch.map(item => `${item.batch}-${item.sku}`)
     ];
-  
+
     const filteredData = await getStockRegister(value.sku);
     if (!filteredData) {
       setIsTrueForTwoSeconds(value.sku);
       setIsTrueForText(value.sku);
-  
+
       setTimeout(() => {
         setIsTrueForTwoSeconds(false);
       }, 500);
-  
+
       return;
     }
-  
+
     setFilteredData(filteredData);
-    
+
     const batch = [];
     filteredData.map((item) => {
       batch.push({ batch: item.batch, sku: item.sku }); // Include sku for batch
     });
-  
+
     // Filter batches based on both batch and sku
     const batchToShow = batch.filter(
       (item) => !batchNotToShow.includes(`${item.batch}-${item.sku}`)
     );
-  
+
     // Set batch to show after filtering
     value.batchBundle = batchToShow.map(item => item.batch); // Only return the batch ids
-  
+
     value.index = generateRandomId();
-  
+
     setStockRegister(filteredData);
-  
+
     setSelectedProduct((prevSave) => [...prevSave, value]);
-  
+
     setProductList((prevProductList) =>
       prevProductList.filter((product) => value._id !== product._id)
     );
   };
-  
+
 
   const FetchdProductStateUpdate = (toFind, value) => {
     const index = AddedProduct.findIndex((product) => product._id === toFind);
@@ -1496,37 +1496,36 @@ const AnyOther = () => {
                     </dl>
 
                     <dl className="grid gap-x-3 text-sm sm:flex">
-  <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
-    Payment Terms:
-  </label>
+                      <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
+                        Payment Terms:
+                      </label>
 
-  <div className="relative">
-    {/* Input Field with Datalist for Suggestions */}
-    <input
-      list="payment-terms" // Reference to the datalist id
-      className={`${
-        Preview
-          ? "outline-none focus:border-0"
-          : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-      } block w-full flex-1 text-sm text-gray-900`}
-      type="text"
-      value={PaymentTerm}
-      required
-      readOnly={Preview}
-      onChange={(e) => setPaymentTerm(e.target.value)}
-      placeholder="Enter Payment Term"
-    />
+                      <div className="relative">
+                        {/* Input Field with Datalist for Suggestions */}
+                        <input
+                          list="payment-terms" // Reference to the datalist id
+                          className={`${Preview
+                              ? "outline-none focus:border-0"
+                              : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                            } block w-full flex-1 text-sm text-gray-900`}
+                          type="text"
+                          value={PaymentTerm}
+                          required
+                          readOnly={Preview}
+                          onChange={(e) => setPaymentTerm(e.target.value)}
+                          placeholder="Enter Payment Term"
+                        />
 
-    {/* Datalist with default options */}
-    <datalist id="payment-terms">
-      <option value="CASH / MOMO / CHEQUE ON DELIVERY / PDC CHEQUE" />
-      <option value="CASH" />
-      <option value="MOMO" />
-      <option value="CHEQUE ON DELIVERY" />
-      <option value="PDC CHEQUE" />
-    </datalist>
-  </div>
-  </dl>
+                        {/* Datalist with default options */}
+                        <datalist id="payment-terms">
+                          <option value="CASH / MOMO / CHEQUE ON DELIVERY / PDC CHEQUE" />
+                          <option value="CASH" />
+                          <option value="MOMO" />
+                          <option value="CHEQUE ON DELIVERY" />
+                          <option value="PDC CHEQUE" />
+                        </datalist>
+                      </div>
+                    </dl>
 
                     <dl className="grid gap-x-3 text-sm sm:flex pb-4 pt-2">
                       <label className="dark:text-neutral-500 min-w-[120px] text-gray-600">
@@ -2329,7 +2328,7 @@ const AnyOther = () => {
                               Remaining Amount:
                             </dt>
                             <dd className="dark:text-neutral-200 col-span-2 text-left font-medium text-gray-800">
-                              {TotalPrice - totalAddedAmount <=0 ? 0 : TotalPrice - totalAddedAmount}
+                              {TotalPrice - totalAddedAmount <= 0 ? 0 : TotalPrice - totalAddedAmount}
                             </dd>
                           </dl>
                         ) : null}
@@ -2475,9 +2474,9 @@ const AnyOther = () => {
                   </div>
                 </div>
               ) : null}
-            {
-              console.log(reference) 
-            }
+              {
+                console.log(reference)
+              }
               {/* Completed transaction */}
               {reference && reference.totalAmount - totalAddedAmount <= 0 ? (
                 <div className=" bottom-0 left-0 w-full bg-green-500 p-4 text-center text-white">
