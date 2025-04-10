@@ -1240,9 +1240,10 @@ const AnyOther = () => {
   const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return `${date.getMonth() + 1}/${date.getFullYear()}`; // Only month/year
   };
-  
+
+
 
 
   return (
@@ -1513,8 +1514,8 @@ const AnyOther = () => {
                         <input
                           list="payment-terms" // Reference to the datalist id
                           className={`${Preview
-                              ? "outline-none focus:border-0"
-                              : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                            ? "outline-none focus:border-0"
+                            : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
                             } block w-full flex-1 text-sm text-gray-900`}
                           type="text"
                           value={PaymentTerm}
@@ -1739,41 +1740,41 @@ const AnyOther = () => {
   <table className="w-full border-separate border-spacing-2">
     <thead>
       <tr className="border-b border-gray-200">
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           Name
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           SKU
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           Type
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           Batch
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           Expiry
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-left p-2">
           Pack Style
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-right p-2">
           No Of Carton
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-right p-2">
           Total Unit Quantity
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-right p-2">
           Unit Price
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-          Discount (in %):
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-right p-2">
+          Discount (in %)
         </th>
-        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-right p-2">
           Total Value Gh
         </th>
         {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
-          <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600 text-center p-2">
             Actions
           </th>
         ) : null}
@@ -1784,17 +1785,17 @@ const AnyOther = () => {
       {AddedProduct &&
         AddedProduct.map((item, index) => (
           <tr key={index} className="border-t border-gray-200">
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.productDescription}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.sku}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.type}
             </td>
             {AddedProduct && (
-              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
                 <input
                   className={`${Preview
                     ? "outline-none focus:border-0"
@@ -1807,16 +1808,18 @@ const AnyOther = () => {
                 />
               </td>
             )}
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-  <input
-    className={`${Preview ? "outline-none focus:border-0" : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"} block w-full flex-1 cursor-not-allowed border-none text-sm text-gray-900 outline-none placeholder:text-gray-800`}
-    type="text"
-    required
-    value={item.expiry ? item.expiry.split('T')[0] : ''}
-    readOnly={true}
-  />
-</td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
+              <input
+                className={`${Preview ? "outline-none focus:border-0" : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 cursor-not-allowed border-none text-sm text-gray-900 outline-none placeholder:text-gray-800`}
+                type="text"
+                required
+                value={formatDate(item.expiry)}
+                readOnly={true}
+              />
+            </td>
+
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {Preview ? (
                 <span className="text-sm text-gray-900">{item.packingStyle || "N/A"}</span>
               ) : (
@@ -1844,7 +1847,7 @@ const AnyOther = () => {
                 </select>
               )}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -1863,7 +1866,7 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -1882,7 +1885,7 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -1901,7 +1904,7 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -1920,11 +1923,11 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               {parseFloat(item.valueOfGh).toFixed(3)}
             </td>
             {!Preview && reference?.lockInvoice != true && MapSingleProduct && (
-              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2">
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2 justify-center p-2">
                 <button
                   className="rounded-lg bg-blue-600 p-2 text-white"
                   onClick={() =>
@@ -1979,16 +1982,16 @@ const AnyOther = () => {
       {SelectedProduct &&
         SelectedProduct.map((item, index) => (
           <tr key={index} className="border-t border-gray-200">
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.name}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.sku}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               {item.type}
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               <select
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2010,7 +2013,7 @@ const AnyOther = () => {
                 ))}
               </select>
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2021,7 +2024,7 @@ const AnyOther = () => {
                 readOnly={true}
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-left p-2">
               <select
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2045,7 +2048,7 @@ const AnyOther = () => {
               </select>
             </td>
 
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2063,7 +2066,7 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2082,7 +2085,7 @@ const AnyOther = () => {
                 }
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2101,7 +2104,7 @@ const AnyOther = () => {
                 }}
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               <input
                 className={`${Preview
                   ? "outline-none focus:border-0"
@@ -2120,11 +2123,11 @@ const AnyOther = () => {
                 }}
               />
             </td>
-            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-right p-2">
               {item.valueOfGh}
             </td>
             {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
-              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2" >
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2 justify-center p-2">
                 <button
                   className="rounded-lg bg-blue-600 p-2 text-white"
                   onClick={() =>
@@ -2173,11 +2176,10 @@ const AnyOther = () => {
                   </svg>
                 </button>
               </td>
-
             ) : null}
             {
               !reference && !CreatedInvoice && SelectedProduct ?
-                <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+                <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 text-center p-2">
                   <button
                     className="rounded-lg bg-red-600 p-2 text-white"
                     onClick={() => removeProduct(item, "Draft")}
@@ -2220,7 +2222,6 @@ const AnyOther = () => {
                 </td>
                 : null
             }
-
           </tr>
         ))}
     </tbody>
