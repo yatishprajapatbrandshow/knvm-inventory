@@ -1237,6 +1237,14 @@ const AnyOther = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+  
+
+
   return (
     <>
       <div className="mx-auto p-5">
@@ -1727,499 +1735,497 @@ const AnyOther = () => {
                 </>
               ) : null}
 
-              <div className="dark:border-neutral-700 mt-6 space-y-4 rounded-lg border border-gray-200 p-4">
-                <table className="w-full border-separate border-spacing-2">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Name
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        SKU
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Type
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Batch
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Pack Style
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        No Of Carton
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Total Unit Quantity
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Unit Price
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Discount (in %):
-                      </th>
-                      <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                        Total Value Gh
-                      </th>
-                      {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
-                        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
-                          Actions
-                        </th>
-                      ) : null}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {console.log("Added Product", AddedProduct)}
-                    {AddedProduct &&
-                      AddedProduct.map((item, index) => (
-                        <tr key={index} className="border-t border-gray-200">
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.productDescription}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.sku}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.type}
-                          </td>
-                          {AddedProduct && (
-                            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                              <input
-                                className={`${Preview
-                                  ? "outline-none focus:border-0"
-                                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                  } block w-full flex-1 cursor-not-allowed border-none text-sm text-gray-900 outline-none placeholder:text-gray-800`}
-                                type="text"
-                                required
-                                value={item.batch}
-                                readOnly={true}
-                              />
-                            </td>
-                          )}
-                          {/* <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                              type="text"
-                              placeholder={item.packingStyle}
-                              value={item.packingStyle}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                FetchdProductStateUpdate(item._id, {
-                                  packingStyle: e.target.value,
-                                })
-                              }
-                            />
-                          </td> */}
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {Preview ? (
-                              // If in Preview mode, display the packing style value as text
-                              <span className="text-sm text-gray-900">{item.packingStyle || "N/A"}</span>
-                            ) : (
-                              // Otherwise, show the dropdown
-                              <select
-                                className={`${Preview
-                                  ? "outline-none focus:border-0"
-                                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                  } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                                required
-                                value={item.packingStyle}
-                                disabled={Preview}
-                                onChange={(e) =>
-                                  FetchdProductStateUpdate(item._id, {
-                                    packingStyle: e.target.value,
-                                  })
-                                }
-                                defaultValue=""
-                              >
-                                <option value="" disabled>
-                                  Select pack style
-                                </option>
-                                <option value="Box">Box</option>
-                                <option value="Cartons">Cartons</option>
-                                <option value="Other">Other</option>
-                              </select>
-                            )}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                              type="number"
-                              placeholder={item.noOfCarton}
-                              value={item.noOfCarton}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                FetchdProductStateUpdate(item._id, {
-                                  noOfCarton: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                              type="number"
-                              placeholder={item.totalUnitQuantity}
-                              value={item.totalUnitQuantity}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                FetchdProductStateUpdate(item._id, {
-                                  totalUnitQuantity: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                              type="number"
-                              placeholder={item.unitPrice}
-                              value={item.unitPrice}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                FetchdProductStateUpdate(item._id, {
-                                  unitPrice: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
-                              type="number"
-                              placeholder={item?.discount}
-                              value={item?.discount}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                FetchdProductStateUpdate(item._id, {
-                                  discount: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {parseFloat(item.valueOfGh).toFixed(3)}
-                            {/* {item.totalUnitQuantity && item.unitPrice
-                                    ? parseFloat(item.totalUnitQuantity) *
-                                      parseFloat(item.unitPrice)
-                                    : null} */}
-                          </td>
-                          {!Preview && reference?.lockInvoice != true && MapSingleProduct && (
-                            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2">
-                              <button
-                                className="rounded-lg bg-blue-600 p-2 text-white"
-                                onClick={() =>
-                                  SongleProductInvoiceMap(index, InvoiceID)
-                                }
-                              >
-                                Apply
-                              </button>
-                              <button
-                                className="rounded-lg bg-red-600 p-2 text-white"
-                                onClick={() => removeProduct(item, reference?.status)}
-                              >
-                                <svg
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#fff"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <line
-                                    x1="2"
-                                    y1="4"
-                                    x2="22"
-                                    y2="4"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                  />
-                                  <line
-                                    x1="2"
-                                    y1="20"
-                                    x2="22"
-                                    y2="20"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                  />
-                                </svg>
-                              </button>
-                            </td>
-                          )}
-                        </tr>
-                      ))}
-                    {SelectedProduct &&
-                      SelectedProduct.map((item, index) => (
-                        <tr key={index} className="border-t border-gray-200">
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.name}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.sku}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.type}
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <select
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              required
-                              disabled={Preview}
-                              onChange={(e) =>
-                                ProductStateUpdate(item.index, {
-                                  batch: e.target.value,
-                                })
-                              }
-                            >
-                              <option value="">Select Batch</option>
-                              {item.batchBundle.map((item, index) => (
-                                <option key={index} value={item}>
-                                  {item}
-                                </option>
-                              ))}
-                            </select>
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <select
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              required
-                              disabled={Preview}
-                              onChange={(e) =>
-                                ProductStateUpdate(item.index, {
-                                  packingStyle: e.target.value,
-                                })
-                              }
-                              defaultValue=""
-                            >
-                              <option value="" disabled>
-                                Select pack style
-                              </option>
-                              <option value="Box">Box</option>
-                              <option value="Cartons">Cartons</option>
-                              <option value="Other">Other</option>
-                            </select>
-                          </td>
+<div className="dark:border-neutral-700 mt-6 space-y-4 rounded-lg border border-gray-200 p-4">
+  <table className="w-full border-separate border-spacing-2">
+    <thead>
+      <tr className="border-b border-gray-200">
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Name
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          SKU
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Type
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Batch
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Expiry
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Pack Style
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          No Of Carton
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Total Unit Quantity
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Unit Price
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Discount (in %):
+        </th>
+        <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+          Total Value Gh
+        </th>
+        {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
+          <th className="dark:text-neutral-500 text-xs font-medium uppercase text-gray-600">
+            Actions
+          </th>
+        ) : null}
+      </tr>
+    </thead>
+    <tbody>
+      {console.log("Added Product", AddedProduct)}
+      {AddedProduct &&
+        AddedProduct.map((item, index) => (
+          <tr key={index} className="border-t border-gray-200">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.productDescription}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.sku}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.type}
+            </td>
+            {AddedProduct && (
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+                <input
+                  className={`${Preview
+                    ? "outline-none focus:border-0"
+                    : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                    } block w-full flex-1 cursor-not-allowed border-none text-sm text-gray-900 outline-none placeholder:text-gray-800`}
+                  type="text"
+                  required
+                  value={item.batch}
+                  readOnly={true}
+                />
+              </td>
+            )}
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+  <input
+    className={`${Preview ? "outline-none focus:border-0" : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"} block w-full flex-1 cursor-not-allowed border-none text-sm text-gray-900 outline-none placeholder:text-gray-800`}
+    type="text"
+    required
+    value={item.expiry ? item.expiry.split('T')[0] : ''}
+    readOnly={true}
+  />
+</td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {Preview ? (
+                <span className="text-sm text-gray-900">{item.packingStyle || "N/A"}</span>
+              ) : (
+                <select
+                  className={`${Preview
+                    ? "outline-none focus:border-0"
+                    : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                    } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
+                  required
+                  value={item.packingStyle}
+                  disabled={Preview}
+                  onChange={(e) =>
+                    FetchdProductStateUpdate(item._id, {
+                      packingStyle: e.target.value,
+                    })
+                  }
+                  defaultValue=""
+                >
+                  <option value="" disabled>
+                    Select pack style
+                  </option>
+                  <option value="Box">Box</option>
+                  <option value="Cartons">Cartons</option>
+                  <option value="Other">Other</option>
+                </select>
+              )}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
+                type="number"
+                placeholder={item.noOfCarton}
+                value={item.noOfCarton}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) =>
+                  FetchdProductStateUpdate(item._id, {
+                    noOfCarton: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
+                type="number"
+                placeholder={item.totalUnitQuantity}
+                value={item.totalUnitQuantity}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) =>
+                  FetchdProductStateUpdate(item._id, {
+                    totalUnitQuantity: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
+                type="number"
+                placeholder={item.unitPrice}
+                value={item.unitPrice}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) =>
+                  FetchdProductStateUpdate(item._id, {
+                    unitPrice: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900 placeholder:text-gray-800`}
+                type="number"
+                placeholder={item?.discount}
+                value={item?.discount}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) =>
+                  FetchdProductStateUpdate(item._id, {
+                    discount: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {parseFloat(item.valueOfGh).toFixed(3)}
+            </td>
+            {!Preview && reference?.lockInvoice != true && MapSingleProduct && (
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2">
+                <button
+                  className="rounded-lg bg-blue-600 p-2 text-white"
+                  onClick={() =>
+                    SongleProductInvoiceMap(index, InvoiceID)
+                  }
+                >
+                  Apply
+                </button>
+                <button
+                  className="rounded-lg bg-red-600 p-2 text-white"
+                  onClick={() => removeProduct(item, reference?.status)}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <line
+                      x1="2"
+                      y1="4"
+                      x2="22"
+                      y2="4"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="2"
+                      y1="20"
+                      x2="22"
+                      y2="20"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </td>
+            )}
+          </tr>
+        ))}
+      {SelectedProduct &&
+        SelectedProduct.map((item, index) => (
+          <tr key={index} className="border-t border-gray-200">
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.name}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.sku}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.type}
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <select
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                required
+                disabled={Preview}
+                onChange={(e) =>
+                  ProductStateUpdate(item.index, {
+                    batch: e.target.value,
+                  })
+                }
+              >
+                <option value="">Select Batch</option>
+                {item.batchBundle.map((item, index) => (
+                  <option key={index} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                type="text"
+                value={item.expiry ? new Date(item.expiry).toLocaleDateString() : ''}
+                readOnly={true}
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <select
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                required
+                disabled={Preview}
+                onChange={(e) =>
+                  ProductStateUpdate(item.index, {
+                    packingStyle: e.target.value,
+                  })
+                }
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select pack style
+                </option>
+                <option value="Box">Box</option>
+                <option value="Cartons">Cartons</option>
+                <option value="Other">Other</option>
+              </select>
+            </td>
 
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              type="number"
-                              pattern="[0-9]*"
-                              value={item.noOfCarton}
-                              required
-                              readOnly={Preview}
-                              onChange={(e) =>
-                                ProductStateUpdate(item.index, {
-                                  noOfCarton: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              type="number"
-                              min={0}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              value={item?.totalUnitQuantity}
-                              onChange={(e) =>
-                                ProductStateUpdate(item.index, {
-                                  totalUnitQuantity: e.target.value,
-                                })
-                              }
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              type="number"
-                              min={0}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) => {
-                                item.unitPrice = parseFloat(e.target.value);
-                                ProductStateUpdate(item.index, {
-                                  unitPrice: e.target.value,
-                                });
-                              }}
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            <input
-                              className={`${Preview
-                                ? "outline-none focus:border-0"
-                                : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
-                                } block w-full flex-1 text-sm text-gray-900`}
-                              type="number"
-                              min={0}
-                              pattern="[0-9]*"
-                              required
-                              readOnly={Preview}
-                              onChange={(e) => {
-                                item.discount = parseFloat(e.target.value);
-                                ProductStateUpdate(item.index, {
-                                  discount: e.target.value,
-                                });
-                              }}
-                            />
-                          </td>
-                          <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                            {item.valueOfGh}
-                          </td>
-                          {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
-                            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2" >
-                              <button
-                                className="rounded-lg bg-blue-600 p-2 text-white"
-                                onClick={() =>
-                                  SelectedProductInvoiceMap(index, InvoiceID)
-                                }
-                              >
-                                Apply
-                              </button>
-                              <button
-                                className="rounded-lg bg-red-600 p-2 text-white"
-                                onClick={() => removeProduct(item, "Draft")}
-                              >
-                                <svg
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="#fff"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                  <line
-                                    x1="2"
-                                    y1="4"
-                                    x2="22"
-                                    y2="4"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                  />
-                                  <line
-                                    x1="2"
-                                    y1="20"
-                                    x2="22"
-                                    y2="20"
-                                    stroke="#fff"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                  />
-                                </svg>
-                              </button>
-                            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                type="number"
+                pattern="[0-9]*"
+                value={item.noOfCarton}
+                required
+                readOnly={Preview}
+                onChange={(e) =>
+                  ProductStateUpdate(item.index, {
+                    noOfCarton: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                type="number"
+                min={0}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                value={item?.totalUnitQuantity}
+                onChange={(e) =>
+                  ProductStateUpdate(item.index, {
+                    totalUnitQuantity: e.target.value,
+                  })
+                }
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                type="number"
+                min={0}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) => {
+                  item.unitPrice = parseFloat(e.target.value);
+                  ProductStateUpdate(item.index, {
+                    unitPrice: e.target.value,
+                  });
+                }}
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              <input
+                className={`${Preview
+                  ? "outline-none focus:border-0"
+                  : "rounded-lg border border-gray-300 bg-gray-50 p-2.5"
+                  } block w-full flex-1 text-sm text-gray-900`}
+                type="number"
+                min={0}
+                pattern="[0-9]*"
+                required
+                readOnly={Preview}
+                onChange={(e) => {
+                  item.discount = parseFloat(e.target.value);
+                  ProductStateUpdate(item.index, {
+                    discount: e.target.value,
+                  });
+                }}
+              />
+            </td>
+            <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+              {item.valueOfGh}
+            </td>
+            {!Preview && reference?.lockInvoice != true && MapSingleProduct ? (
+              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800 flex gap-2" >
+                <button
+                  className="rounded-lg bg-blue-600 p-2 text-white"
+                  onClick={() =>
+                    SelectedProductInvoiceMap(index, InvoiceID)
+                  }
+                >
+                  Apply
+                </button>
+                <button
+                  className="rounded-lg bg-red-600 p-2 text-white"
+                  onClick={() => removeProduct(item, "Draft")}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <line
+                      x1="2"
+                      y1="4"
+                      x2="22"
+                      y2="4"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <line
+                      x1="2"
+                      y1="20"
+                      x2="22"
+                      y2="20"
+                      stroke="#fff"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </button>
+              </td>
 
-                          ) : null}
-                          {
-                            !reference && !CreatedInvoice && SelectedProduct ?
-                              <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
-                                <button
-                                  className="rounded-lg bg-red-600 p-2 text-white"
-                                  onClick={() => removeProduct(item, "Draft")}
-                                >
-                                  <svg
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="#fff"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
-                                      stroke="#fff"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    />
-                                    <line
-                                      x1="2"
-                                      y1="4"
-                                      x2="22"
-                                      y2="4"
-                                      stroke="#fff"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                    />
-                                    <line
-                                      x1="2"
-                                      y1="20"
-                                      x2="22"
-                                      y2="20"
-                                      stroke="#fff"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                    />
-                                  </svg>
-                                </button>
-                              </td>
-                              : null
-                          }
+            ) : null}
+            {
+              !reference && !CreatedInvoice && SelectedProduct ?
+                <td className="dark:text-neutral-500 text-xs font-medium text-gray-800">
+                  <button
+                    className="rounded-lg bg-red-600 p-2 text-white"
+                    onClick={() => removeProduct(item, "Draft")}
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 7H18M10 11V17M14 11V17M5 7H19L18 19H6L5 7Z"
+                        stroke="#fff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <line
+                        x1="2"
+                        y1="4"
+                        x2="22"
+                        y2="4"
+                        stroke="#fff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <line
+                        x1="2"
+                        y1="20"
+                        x2="22"
+                        y2="20"
+                        stroke="#fff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </button>
+                </td>
+                : null
+            }
 
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+</div>
 
               <div className={`relative mt-8 flex sm:justify-end`}>
                 <div className="w-full max-w-2xl space-y-2 sm:text-end">
